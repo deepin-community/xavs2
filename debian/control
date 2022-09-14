@@ -1,0 +1,70 @@
+Source: xavs2
+Section: video
+Priority: optional
+Maintainer: Deepin Developer <deepin-dev@deepin.org>
+Uploaders: Deepin Packages Builder <packages@deepin.org>
+Build-Depends:
+ debhelper,
+ pkg-kde-tools,
+ nasm,
+ help2man,
+Standards-Version: 4.2.1
+Homepage: https://github.com/pkuvcl/xavs2/
+
+Package: xavs2
+Architecture: any
+Depends:
+ libxavs2-13 (= ${binary:Version}),
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: AVS2 (IEEE 1857.4) encoder - command-line tool
+ xavs2 is an encoder for the AVS2-P2/IEEE1857.4 video codec.
+ .
+ Audio Video Coding Standard (AVS) is a standard
+ for compression digital audio and digital,
+ developed and widely used in China.
+ the second generation AVS standard (AVS2)
+ primarily targets Ultra HD (High Definition) video,
+ with features comparable to MPEG H.265 (HEVC) and VC9.
+ .
+ This package provides the command-line tool xavs2.
+
+Package: libxavs2-13
+Architecture: any
+Section: libs
+Multi-Arch: same
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+Pre-Depends:
+ ${misc:Pre-Depends},
+Description: AVS2 (IEEE 1857.4) encoder - runtime library
+ xavs2 is an encoder for the AVS2-P2/IEEE1857.4 video codec.
+ .
+ Audio Video Coding Standard (AVS) is a standard
+ for compression digital audio and digital,
+ developed and widely used in China.
+ the second generation AVS standard (AVS2)
+ primarily targets Ultra HD (High Definition) video,
+ with features comparable to MPEG H.265 (HEVC) and VC9.
+ .
+ This package provides libxavs2 runtime library.
+
+Package: libxavs2-dev
+Architecture: any
+Section: libdevel
+Multi-Arch: same
+Depends:
+ libxavs2-13 (= ${binary:Version}),
+ ${misc:Depends},
+Description: AVS2 (IEEE 1857.4) encoder - runtime library
+ xavs2 is an encoder for the AVS2-P2/IEEE1857.4 video codec.
+ .
+ Audio Video Coding Standard (AVS) is a standard
+ for compression digital audio and digital,
+ developed and widely used in China.
+ the second generation AVS standard (AVS2)
+ primarily targets Ultra HD (High Definition) video,
+ with features comparable to MPEG H.265 (HEVC) and VC9.
+ .
+ This package provides libxavs2 development headers.

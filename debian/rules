@@ -1,0 +1,47 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/architecture.mk
+include /usr/share/dpkg/pkg-info.mk
+
+OPTS = --enable-shared --enable-pic
+
+# avoid SSE2/Altivec on 32bit hosts where not generally supported
+ifneq (,$(filter 64,$(DEB_HOST_ARCH_BITS)))
+OPTS += --disable-asm
+endif
+
+manpage = debian/xavs2.1
+executable = debian/tmp/usr/bin/xavs2
+
+%:
+	dh $@ --sourcedirectory=build/linux --with pkgkde_symbolshelper --parallel
+
+override_dh_auto_configure:
+	VER_SHA="$(DEB_DISTRIBUTION)" dh_auto_configure -- $(OPTS)
+
+# generate manpage based on --help option of script itself
+override_dh_auto_install:
+	dh_auto_install
+	help2man \
+		--name="AVS2 (IEEE 1857.4) encoder" \
+		--no-info \
+		--help-option=' ' \
+		--version-string=$(DEB_VERSION_UPSTREAM) \
+		--output=$(manpage) \
+		$(executable) \
+		|| { $(executable) --help; false; }
+	perl -i -0 -p \
+		-e 's/^xavs2\[i\]: Usage:\n.IP/.SH SYNOPSIS\n.B xavs2/mg;' \
+		-e 's/^(?:.PP\n)?xavs2\[i\]: Supported parameters:/.SH PARAMETERS/mg;' \
+		-e 's/^xavs2\[i\]: {5}(\w+) +: /.TP\n\\fB$$1\\fR/msg;' \
+		-e 's/^CAVS2Enc lib load error.*//ms;' \
+		-e 's/(EncoderFile.cfg|ParameterName|[Vv]alue)/\\fI$$1\\fR/g;' \
+		$@
+
+override_dh_clean:
+	dh_clean
+	rm -f $(manpage)
+
+# avoid triggering configure during cleanup
+override_dh_auto_clean:
+	[ ! -f build/linux/config.mak ] || dh_auto_clean
